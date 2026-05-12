@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Furosemid Klinik Karar Destek Sistemi | MEÜTF Nefroloji</title>
+<title>Furosemid Doz Hesaplayıcı | MEÜTF Nefroloji</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -200,6 +200,63 @@ input:focus,select:focus,textarea:focus{
 .radio-pill input:checked + span{
   background:var(--accent);color:#f0ebe0;
   border-color:var(--accent);font-weight:600;
+}
+
+.checkbox-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.check-pill{
+  position:relative;cursor:pointer;
+}
+.check-pill input{position:absolute;opacity:0;pointer-events:none}
+.check-pill span{
+  display:block;
+  padding:7px 12px;
+  border:1px solid var(--line);
+  border-radius:6px;
+  font-size:13px;
+  background:#fdfbf6;
+  transition:all .15s;
+}
+.check-pill span::before{
+  content:"☐";
+  margin-right:6px;
+  color:var(--ink-mute);
+  font-size:14px;
+}
+.check-pill input:checked + span{
+  background:var(--accent-soft);color:var(--accent-ink);
+  border-color:var(--accent);font-weight:600;
+}
+.check-pill input:checked + span::before{
+  content:"☑";
+  color:var(--accent);
+}
+
+.dose-btn-group{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-top:8px;
+}
+.dose-btn{
+  flex:1;min-width:90px;
+  background:#fdfbf6;
+  color:var(--accent-ink);
+  border:1.5px solid var(--line);
+  padding:12px 10px;
+  border-radius:8px;
+  font-family:var(--sans);font-size:15px;font-weight:600;
+  cursor:pointer;
+  transition:all .15s;
+  line-height:1.2;
+}
+.dose-btn:hover{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  transform:translateY(-1px);
+}
+.dose-btn.active{
+  background:var(--accent);
+  color:#f0ebe0;
+  border-color:var(--accent-ink);
+  box-shadow:0 2px 6px rgba(13,79,60,.2);
 }
 
 .btn-primary{
@@ -470,7 +527,7 @@ input:focus,select:focus,textarea:focus{
   <div class="brand">
     <div class="brand-mark">F</div>
     <div class="brand-text">
-      <div class="brand-title">Furosemid Klinik Karar Destek Sistemi</div>
+      <div class="brand-title">Furosemid Doz Hesaplayıcı</div>
       <div class="brand-sub">MEÜTF Nefroloji Bilim Dalı</div>
     </div>
   </div>
@@ -480,331 +537,55 @@ input:focus,select:focus,textarea:focus{
 <div class="container">
 
   <nav class="tab-nav" id="tabNav">
-    <button class="tab-btn active" data-tab="m1"><span class="tab-icon">🩺</span> Başlangıç Dozu</button>
-    <button class="tab-btn" data-tab="m2"><span class="tab-icon">⚡</span> Diüretik Direnci</button>
-    <button class="tab-btn" data-tab="m3"><span class="tab-icon">🔄</span> Formül/Yol Dönüşümü</button>
+    <button class="tab-btn active" data-tab="m1"><span class="tab-icon">🩺</span> Doz & Order</button>
     <button class="tab-btn" data-tab="m4"><span class="tab-icon">🧪</span> Diyaliz Hastasında</button>
     <button class="tab-btn" data-tab="m6"><span class="tab-icon">📋</span> Hızlı Referans</button>
   </nav>
 
-  <!-- ============ MODÜL 1: BAŞLANGIÇ DOZU ============ -->
+  <!-- ============ MODÜL 1: DOZ & ORDER ============ -->
   <section class="module active" id="m1">
     <div class="module-head">
       <div class="module-eyebrow">Modül 1</div>
-      <h1 class="module-title">Başlangıç Dozu Hesaplayıcı</h1>
-      <p class="module-desc">Diüretik-naif veya kronik kullanıcı hastada, endikasyon ve renal fonksiyona göre furosemid başlangıç dozu önerisi ve titrasyon planı.</p>
+      <h1 class="module-title">Maksimum Etkin Doz & Order</h1>
+      <p class="module-desc">Hastanın renal fonksiyonuna göre maksimum etkin tek doz furosemid. Hem puşe hem sürekli infüzyon için hazırlama ve uygulama order'ı.</p>
     </div>
 
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title"><span class="card-title-num">1</span>Hasta Bilgileri</div>
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">1</span>Hasta Bilgisi</div>
 
-        <div class="field">
-          <label class="field-label">Endikasyon</label>
-          <select id="m1_indication">
-            <option value="hf">Konjestif kalp yetmezliği / Volüm yüklenmesi</option>
-            <option value="cirrhosis">Siroz - Asit</option>
-            <option value="nephrotic">Nefrotik sendrom</option>
-            <option value="ckd">KBH ile ilişkili ödem</option>
-            <option value="pulm">Akut pulmoner ödem</option>
-          </select>
-        </div>
-
-        <div class="field-row">
-          <div class="field">
-            <label class="field-label">eGFR (mL/dk/1.73m²)</label>
-            <input type="number" id="m1_egfr" placeholder="örn. 45" min="0" max="200">
-          </div>
-          <div class="field">
-            <label class="field-label">Vücut ağırlığı (kg)</label>
-            <input type="number" id="m1_weight" placeholder="örn. 75" min="20" max="250">
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="field-label">Daha önce loop diüretik kullanıyor mu?</label>
-          <div class="radio-group">
-            <label class="radio-pill"><input type="radio" name="m1_naive" value="yes" checked><span>Hayır (naif)</span></label>
-            <label class="radio-pill"><input type="radio" name="m1_naive" value="no"><span>Evet</span></label>
-          </div>
-        </div>
-
-        <div id="m1_currentDose" style="display:none">
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label">Mevcut ilaç</label>
-              <select id="m1_currentDrug">
-                <option value="furosemide">Furosemid</option>
-                <option value="torsemide">Torsemid</option>
-              </select>
-            </div>
-            <div class="field">
-              <label class="field-label">Yol</label>
-              <select id="m1_currentRoute">
-                <option value="po">Oral</option>
-                <option value="iv">IV</option>
-              </select>
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label">Tek doz (mg)</label>
-              <input type="number" id="m1_currentMg" placeholder="örn. 40">
-            </div>
-            <div class="field">
-              <label class="field-label">Sıklık</label>
-              <select id="m1_currentFreq">
-                <option value="1">Günde 1</option>
-                <option value="2">Günde 2</option>
-                <option value="3">Günde 3</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <button class="btn-primary" onclick="calcM1()">Doz Önerisi Hesapla</button>
+      <div class="field">
+        <label class="field-label">eGFR (mL/dk/1.73m²)</label>
+        <input type="number" id="m1_egfr" placeholder="örn. 45" min="0" max="200">
+        <div class="field-hint">Maksimum etkin doz eGFR'ye göre belirlenir.</div>
       </div>
 
-      <div class="card">
-        <div class="card-title"><span class="card-title-num">2</span>Önerilen Plan</div>
-        <div class="output" id="m1_output">
-          <div class="output-empty">Hasta bilgilerini girin ve "Doz Önerisi Hesapla"ya basın.</div>
+      <div class="field">
+        <label class="field-label">Klinik durum (varsa işaretle)</label>
+        <div class="checkbox-group">
+          <label class="check-pill"><input type="checkbox" class="m1_clinical" value="nephrotic"><span>Nefrotik sendrom</span></label>
+          <label class="check-pill"><input type="checkbox" class="m1_clinical" value="chronic"><span>Kronik loop diüretik kullanıcısı</span></label>
+          <label class="check-pill"><input type="checkbox" class="m1_clinical" value="resistance"><span>Diüretik direnci</span></label>
+          <label class="check-pill"><input type="checkbox" class="m1_clinical" value="hf"><span>Refrakter kalp yetmezliği</span></label>
+          <label class="check-pill"><input type="checkbox" class="m1_clinical" value="cirrhosis"><span>Refrakter siroz</span></label>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ MODÜL 2: DİÜRETİK DİRENCİ ============ -->
-  <section class="module" id="m2">
-    <div class="module-head">
-      <div class="module-eyebrow">Modül 2</div>
-      <h1 class="module-title">Diüretik Direnci & Akut Dekompansasyon Algoritması</h1>
-      <p class="module-desc">Mevcut diüretik dozuna yanıt yetersiz hasta için adım adım yaklaşım. Her adım yanıt yoksa bir sonrakine geçilir.</p>
-    </div>
-
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title"><span class="card-title-num">1</span>Ev Dozu Bilgisi</div>
-
-        <div class="field">
-          <label class="field-label">Mevcut oral loop diüretik ilaç</label>
-          <select id="m2_drug">
-            <option value="furosemide">Furosemid</option>
-            <option value="torsemide">Torsemid</option>
-          </select>
-        </div>
-
-        <div class="field-row">
-          <div class="field">
-            <label class="field-label">Tek doz (mg)</label>
-            <input type="number" id="m2_dose" placeholder="örn. 80">
-          </div>
-          <div class="field">
-            <label class="field-label">Günlük sıklık</label>
-            <select id="m2_freq">
-              <option value="1">Günde 1</option>
-              <option value="2" selected>Günde 2</option>
-              <option value="3">Günde 3</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="field-label">eGFR (mL/dk/1.73m²)</label>
-          <input type="number" id="m2_egfr" placeholder="örn. 35">
-        </div>
-
-        <button class="btn-primary" onclick="calcM2()">Algoritmayı Başlat</button>
+        <div class="field-hint">Bu durumlardan biri varsa eGFR ≥30 olsa bile 80 mg üstü doz gerekebilir. 80 mg yanıtsızsa 100 → 200 mg arası seçenekler sunulur.</div>
       </div>
 
-      <div class="card">
-        <div class="card-title"><span class="card-title-num">2</span>İlk IV Bolus Önerisi</div>
-        <div class="output" id="m2_initial">
-          <div class="output-empty">Hasta bilgilerini girin.</div>
-        </div>
-      </div>
+      <button class="btn-primary" onclick="calcM1()">Order Hesapla</button>
     </div>
 
     <div class="card" style="margin-top:20px">
-      <div class="card-title">Adım Adım Direnç Algoritması</div>
-      <p style="color:var(--ink-soft);font-size:13px;margin-bottom:8px">Her adıma tıklayarak detayları açabilirsiniz. Yanıt yoksa bir sonraki adıma geçin.</p>
-
-      <div class="flow">
-        <div class="flow-step" onclick="this.classList.toggle('expanded')">
-          <div class="flow-step-head">
-            <div class="flow-num">1</div>
-            <div class="flow-title">İlk IV Bolus — Ev dozunun 1–2.5 katı</div>
-          </div>
-          <div class="flow-body">
-            Hasta evde aldığı toplam günlük oral dozun <strong>1–2.5 katı</strong> kadar IV bolus uygulanır. Yanıt: 2 saat içinde idrar çıkışı izlenir. <span class="pill-warn pill">Maksimum etkili tek doz: 80–200 mg</span>
-            <div class="flow-criteria">
-              <strong>Yanıt kriteri:</strong> İlk 2 saatte ≥ 100–150 mL idrar (DOSE çalışması perspektifinden), spot urin sodyum &gt; 50–70 mmol/L
-            </div>
-          </div>
-        </div>
-
-        <div class="flow-arrow">↓ Yanıt yetersiz</div>
-
-        <div class="flow-step" onclick="this.classList.toggle('expanded')">
-          <div class="flow-step-head">
-            <div class="flow-num">2</div>
-            <div class="flow-title">Dozu İki Katına Çıkar — Sıklığı DEĞİL</div>
-          </div>
-          <div class="flow-body">
-            Eşik konsantrasyon mantığı: Tübül lümenindeki ilaç düzeyi belli bir eşiği geçmedikçe natriürez başlamaz. Aynı dozu daha sık vermek zirvelere ulaşmaz; <strong>tek dozu iki katına çıkarmak gerekir</strong>.
-            <div class="flow-criteria">
-              <strong>Tekrar aralığı:</strong> ≥2 saat. Maksimum tek doz: 200 mg IV (renal disfonksiyonda bile bu eşiğin üstünde ek diürez beklenmiyor).
-            </div>
-            <div class="alert alert-warn" style="margin-top:10px">
-              <strong>Yaygın hata:</strong> Aynı dozu 4×/gün vermek. Bu, eşik mantığını kırar ve sadece toksisiteyi artırır.
-            </div>
-          </div>
-        </div>
-
-        <div class="flow-arrow">↓ Yanıt yetersiz</div>
-
-        <div class="flow-step" onclick="this.classList.toggle('expanded')">
-          <div class="flow-step-head">
-            <div class="flow-num">3</div>
-            <div class="flow-title">Sürekli IV İnfüzyona Geç</div>
-          </div>
-          <div class="flow-body">
-            Etkili bolus dozdan <strong>hemen sonra</strong> infüzyona başla.
-            <table class="tbl" style="margin-top:8px">
-              <tr><th>Renal fonksiyon</th><th>Başlangıç</th><th>Titrasyon</th><th>Tavan</th></tr>
-              <tr><td>eGFR ≥ 30</td><td class="tbl-mono">5 mg/saat</td><td class="tbl-mono">→ 10 mg/saat</td><td class="tbl-mono">40 mg/saat</td></tr>
-              <tr><td>eGFR &lt; 30</td><td class="tbl-mono">20 mg/saat</td><td class="tbl-mono">→ 40 mg/saat</td><td class="tbl-mono">40 mg/saat</td></tr>
-            </table>
-            <div class="alert alert-info" style="margin-top:10px">
-              <strong>DOSE çalışması (NEJM 2011):</strong> Yüksek doz bolus ve sürekli infüzyon arasında 72. saat sonuçlarında belirgin fark bulunmadı; ancak yüksek doz bolus daha hızlı diürez ve dispne rahatlaması sağladı.
-            </div>
-          </div>
-        </div>
-
-        <div class="flow-arrow">↓ Hâlâ direnç</div>
-
-        <div class="flow-step" onclick="this.classList.toggle('expanded')">
-          <div class="flow-step-head">
-            <div class="flow-num">4</div>
-            <div class="flow-title">Sequential Nephron Blockade — İkinci ajan ekle</div>
-          </div>
-          <div class="flow-body">
-            Loop diüretiğe dirençte distal tübüler natriürezi engellemek için ikinci sınıf ajan eklenmeli.
-            <ul style="margin:10px 0 0 18px;font-size:13px;line-height:1.7">
-              <li><strong>Tiyazid (HCT 25–50 mg/gün, metolazon 2.5–10 mg/gün)</strong> — CLOROTIC çalışması (JAMA Intern Med 2023): IV HCT eklenmesi diürezde anlamlı artış sağladı.</li>
-              <li><strong>Asetazolamid 500 mg IV/gün</strong> — ADVOR (NEJM 2022): Akut KY'de loop'a eklenmesi dekonjesyon başarısını %46 → %42'den %42 → %46'ya çıkardı (NNT küçük).</li>
-              <li><strong>Spironolakton/eplerenon</strong> — KY için zaten endike, hipokalemiyi önler.</li>
-              <li><strong>SGLT2i (empagliflozin/dapagliflozin)</strong> — EMPULSE/DAPA-RESIST: Akut KY'de erken başlangıç güvenli ve faydalı.</li>
-            </ul>
-            <div class="alert alert-warn" style="margin-top:10px">
-              <strong>İzlem:</strong> Tiyazid eklendiğinde günlük Na, K, Mg, Cl, kreatinin. Hipokalemi ve hipovolemi riski tavanda.
-            </div>
-          </div>
-        </div>
-
-        <div class="flow-arrow">↓ Hâlâ direnç</div>
-
-        <div class="flow-step" onclick="this.classList.toggle('expanded')">
-          <div class="flow-step-head">
-            <div class="flow-num">5</div>
-            <div class="flow-title">Mekanik Su Çekimi — UF / Aquapheresis / RRT</div>
-          </div>
-          <div class="flow-body">
-            Maksimum medikal tedaviye rağmen dekonjesyon sağlanamayan, oligürik veya elektrolit bozukluğu/asidozu ilerleyen hastalarda <strong>izole ultrafiltrasyon</strong> veya <strong>SLED/CRRT</strong> düşünülmeli.
-            <div class="alert alert-info" style="margin-top:10px">
-              <strong>CARRESS-HF (NEJM 2012):</strong> Akut KY'de UF, agresif diüretik tedavisine üstün bulunmadı, daha fazla AKI ile ilişkilendirildi. → UF'yi rutin değil, refrakter olgular için sakla.
-            </div>
-            <div class="alert alert-warn" style="margin-top:10px">
-              <strong>Furosemid stress test:</strong> 1–1.5 mg/kg IV bolus sonrası 2 saatte &lt; 200 mL idrar → AKI'de KRT ihtiyacını yüksek öngörü ile predikte eder.
-            </div>
-          </div>
-        </div>
+      <div class="card-title"><span class="card-title-num">2</span>📋 Order</div>
+      <div class="output" id="m1_output">
+        <div class="output-empty">eGFR girin ve "Order Hesapla"ya basın.</div>
       </div>
     </div>
   </section>
 
-  <!-- ============ MODÜL 3: FORMÜL DÖNÜŞÜMÜ ============ -->
-  <section class="module" id="m3">
-    <div class="module-head">
-      <div class="module-eyebrow">Modül 3</div>
-      <h1 class="module-title">Formül & Yol Dönüşümü</h1>
-      <p class="module-desc">Loop diüretikler arası eşdeğerlik ve oral ↔ IV ↔ subkutan yol değişimleri.</p>
-    </div>
-
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title"><span class="card-title-num">1</span>Dönüşüm Hesaplayıcı</div>
-
-        <div class="field">
-          <label class="field-label">Mevcut ilaç</label>
-          <select id="m3_from">
-            <option value="furo_po">Furosemid — Oral</option>
-            <option value="furo_iv">Furosemid — IV</option>
-            <option value="tors_po">Torsemid — Oral</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label class="field-label">Mevcut tek doz (mg)</label>
-          <input type="number" id="m3_dose" placeholder="örn. 40">
-        </div>
-
-        <div class="field">
-          <label class="field-label">Hedef ilaç & yol</label>
-          <select id="m3_to">
-            <option value="furo_po">Furosemid — Oral</option>
-            <option value="furo_iv">Furosemid — IV</option>
-            <option value="tors_po">Torsemid — Oral</option>
-          </select>
-        </div>
-
-        <button class="btn-primary" onclick="calcM3()">Çevir</button>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span class="card-title-num">2</span>Dönüşüm Sonucu</div>
-        <div class="output" id="m3_output">
-          <div class="output-empty">Mevcut ve hedef formülasyonu seçin.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:20px">
-      <div class="card-title">Hızlı Eşdeğerlik Referansı</div>
-
-      <div class="conv-grid">
-        <div class="conv-card">
-          <div class="conv-card-title">Loop Diüretik Eşdeğerliği (Normal Renal)</div>
-          <div class="conv-card-eq">Furosemid 40 mg PO<br>= Torsemid 10–20 mg PO</div>
-          <div class="conv-card-note">Türkiye'de bumetanid bulunmaz; torsemid IV formu da mevcut değildir. Renal disfonksiyonda eşdeğerlikler değişebilir.</div>
-        </div>
-        <div class="conv-card">
-          <div class="conv-card-title">Furosemid PO ↔ IV</div>
-          <div class="conv-card-eq">PO doz = 2 × IV doz</div>
-          <div class="conv-card-note">Biyoyararlanım %47–64 (ortalama %50). Hastalar arası geniş varyasyon — yanıta göre titre et.</div>
-        </div>
-        <div class="conv-card">
-          <div class="conv-card-title">Furosemid → SUBQ (Furoscix/Lasix Onyu)</div>
-          <div class="conv-card-eq">5 saatte 80 mg toplam<br>(30 mg/1. saat + 12.5 mg/saat × 4)</div>
-          <div class="conv-card-note">Ayaktan akut dekompansasyon için. Sirozda kontrendike. Türkiye'de henüz yaygın değil.</div>
-        </div>
-        <div class="conv-card">
-          <div class="conv-card-title">PO Biyoyararlanım Karşılaştırması</div>
-          <div class="conv-card-eq">Furosemid: %50 (değişken)<br>Torsemid: ~%80–100</div>
-          <div class="conv-card-note">PO yanıtı tutarsız hastalarda torsemide geçiş düşünülebilir.</div>
-        </div>
-      </div>
-
-      <div class="alert alert-info" style="margin-top:14px">
-        <strong>TRANSFORM-HF (JAMA 2023):</strong> Furosemid vs torsemid arasında mortalite farkı YOK. Ancak biyoyararlanım üstünlüğü nedeniyle PO yanıtı zayıf hastalarda torsemid pratik bir alternatif.
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ MODÜL 4: DİYALİZ HASTASI ============ -->
+  <!-- ============ MODÜL 2: DİYALİZ HASTASI ============ -->
   <section class="module" id="m4">
     <div class="module-head">
-      <div class="module-eyebrow">Modül 4</div>
+      <div class="module-eyebrow">Modül 2</div>
       <h1 class="module-title">Diyaliz Hastasında Furosemid</h1>
       <p class="module-desc">HD, PD ve CRRT hastalarında rezidüel renal fonksiyona göre dozlama. Furosemid diyalizle uzaklaştırılmaz.</p>
     </div>
@@ -846,11 +627,10 @@ input:focus,select:focus,textarea:focus{
     </div>
   </section>
 
-  <!-- ============ MODÜL 5: ETKİLEŞİM & YAN ETKİ ============ -->
-  <!-- ============ MODÜL 5: HIZLI REFERANS ============ -->
+  <!-- ============ MODÜL 3: HIZLI REFERANS ============ -->
   <section class="module" id="m6">
     <div class="module-head">
-      <div class="module-eyebrow">Modül 5</div>
+      <div class="module-eyebrow">Modül 3</div>
       <h1 class="module-title">Hızlı Referans Kartı</h1>
       <p class="module-desc">Vizit sırasında hızlı bakış için temel doz, farmakokinetik ve klinik eşik değerleri.</p>
     </div>
@@ -998,217 +778,184 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// MODULE 1 — Naive checkbox toggle
-document.querySelectorAll('input[name="m1_naive"]').forEach(r => {
-  r.addEventListener('change', () => {
-    document.getElementById('m1_currentDose').style.display = r.value === 'no' && r.checked ? 'block' : 'none';
-  });
-});
+// ===== Ortak yardımcı fonksiyonlar =====
+// Furosemid ampul: 20 mg / 2 mL
+function ampCount(mg){
+  return mg / 20;
+}
 
-// MODULE 1 — Calculate
+// Belirli bir hedef doz için: Sürekli IV İnfüzyon + Yükleme+İnfüzyon orderlarını üret
+// targetDose_mg: hedeflenen toplam doz (yükleme+ idamenin yaklaşık karşılığı)
+// infRate_mgHr: idame infüzyon hızı (mg/saat) — eGFR'ye göre belirlenir
+function buildOrderSet(targetDose_mg, infRate_mgHr){
+  const targetAmp = ampCount(targetDose_mg);
+  const totalPrep_mg = Math.max(80, targetDose_mg);     // hazırlık en az 80 mg, gerekirse hedef doz kadar
+  const totalPrep_amp = ampCount(totalPrep_mg);
+  const prepVol_mL = totalPrep_mg;                       // 1 mg/mL → mL = mg
+  const totalVol_mL = totalPrep_mg + prepVol_mL;         // ampul hacmi + SF
+  // Idame: perfüzörle infRate_mgHr mL/saat (1 mg/mL olduğu için mL/saat = mg/saat)
+  const infDur_hr = totalPrep_mg / infRate_mgHr;
+
+  // ===== Sürekli infüzyon (yüklemesiz) =====
+  const infusion = `<strong>Furosemid ${totalPrep_amp} ampul (${totalPrep_mg} mg) + ${prepVol_mL} mL %0.9 NaCl</strong> hazırla<br>
+    Toplam hacim: ${totalVol_mL} mL · Konsantrasyon: ~1 mg/mL<br>
+    <strong>Perfüzör ile ${infRate_mgHr} mL/saat hızda IV infüzyon</strong><br>
+    Bu hızda ${infRate_mgHr} mg/saat verilir, hazırlık ${infDur_hr} saatte tamamlanır<br>
+    <span style="font-size:12px;color:var(--ink-mute)">Yanıt yetersizse 2 saat sonra hızı artır (${infRate_mgHr === 5 ? '→ 10 mg/saat' : infRate_mgHr === 10 ? '→ 20 mg/saat' : '→ 40 mg/saat'}) · Tavan: 40 mg/saat</span>`;
+
+  // ===== Yükleme + idame =====
+  // Yükleme dozu = idame hızının ~2 katı (Dormans paradigması: total dozun %20'si ya da pratik olarak 20–80 mg)
+  // Basit kural: hedef doz ≤80 ise yükleme = hedef dozun yarısı, >80 ise yükleme = 40-80 mg
+  let loadDose_mg;
+  if (targetDose_mg <= 80) {
+    loadDose_mg = 40;
+  } else if (targetDose_mg <= 120) {
+    loadDose_mg = 60;
+  } else {
+    loadDose_mg = 80;
+  }
+  const loadAmp = ampCount(loadDose_mg);
+  const loadDur_min = loadDose_mg < 160
+    ? Math.ceil(loadDose_mg / 30)
+    : Math.ceil(loadDose_mg / 3);
+  const loadPrep = loadDose_mg < 160
+    ? `Furosemid ${loadAmp} ampul (${loadDose_mg} mg) undilüe IV puşe, ${loadDur_min} dakikada (hız: 20–40 mg/dk)`
+    : `Furosemid ${loadAmp} ampul (${loadDose_mg} mg) + 100 mL SF, ${loadDur_min} dk kısa infüzyon (hız: 3 mg/dk · max 4 mg/dk)`;
+
+  const loading = `<strong>1) Yükleme:</strong> ${loadPrep}<br>
+    <strong>2) Hemen ardından idame infüzyon:</strong><br>
+    Furosemid ${totalPrep_amp} ampul (${totalPrep_mg} mg) + ${prepVol_mL} mL %0.9 NaCl hazırla<br>
+    <strong>Perfüzör ile ${infRate_mgHr} mL/saat hızda IV infüzyon</strong> (${infRate_mgHr} mg/saat, ${infDur_hr} saatte tamamlanır)<br>
+    <span style="font-size:12px;color:var(--ink-mute)">Yükleme yarı ömrün kısa olmasından kaynaklanan steady-state gecikmesini önler (Dormans 1996)</span>`;
+
+  return {infusion, loading, totalPrep_amp, totalPrep_mg};
+}
+
+// Order kartı render
+function renderOrderBlock(targetDose_mg, infRate_mgHr, label){
+  const o = buildOrderSet(targetDose_mg, infRate_mgHr);
+  let html = `<div style="margin-bottom:10px;padding:8px 12px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:4px;font-size:13px;color:var(--accent-ink)">
+    <strong>${label}</strong> · Hedef hız: ${infRate_mgHr} mg/saat
+  </div>`;
+  html += `<div class="output-section">
+    <div class="output-label">📋 ORDER — Sürekli IV İnfüzyon</div>
+    <div class="output-value" style="font-size:15px;line-height:1.5;font-family:var(--sans);font-weight:500">${o.infusion}</div>
+  </div>`;
+  html += `<div class="output-section">
+    <div class="output-label">📋 ORDER — Yükleme + Sürekli İnfüzyon (Loading)</div>
+    <div class="output-value" style="font-size:15px;line-height:1.5;font-family:var(--sans);font-weight:500">${o.loading}</div>
+  </div>`;
+  return html;
+}
+
+// Yüksek doz seçeneği butonu tıklandığında çağrılır
+function showHigherDose(targetDose_mg, infRate_mgHr){
+  const target = document.getElementById('m1_higherDoseOutput');
+  if (!target) return;
+  target.innerHTML = renderOrderBlock(targetDose_mg, infRate_mgHr,
+    `Seçilen Yüksek Doz: ${targetDose_mg} mg`);
+
+  // Aktif butonu vurgula
+  document.querySelectorAll('.dose-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.dose-btn[data-dose="${targetDose_mg}"]`);
+  if (btn) btn.classList.add('active');
+}
+
+// MODULE 1 — Max Etkin Doz Order Hesaplayıcı
 function calcM1(){
-  const ind = document.getElementById('m1_indication').value;
   const egfr = parseFloat(document.getElementById('m1_egfr').value);
-  const wt = parseFloat(document.getElementById('m1_weight').value);
-  const naive = document.querySelector('input[name="m1_naive"]:checked').value;
   const out = document.getElementById('m1_output');
 
-  if (!egfr || !wt) {
-    out.innerHTML = '<div class="alert alert-warn"><strong>Eksik bilgi:</strong> eGFR ve ağırlık girilmeli.</div>';
+  if (isNaN(egfr)) {
+    out.innerHTML = '<div class="alert alert-warn"><strong>eGFR girilmeli.</strong></div>';
     return;
   }
 
+  // Klinik durum
+  const clinicalChecks = Array.from(document.querySelectorAll('.m1_clinical:checked'));
+  const clinicalLabels = {
+    nephrotic: 'Nefrotik sendrom',
+    chronic: 'Kronik loop diüretik kullanıcısı',
+    resistance: 'Diüretik direnci',
+    hf: 'Refrakter kalp yetmezliği',
+    cirrhosis: 'Refrakter siroz'
+  };
+  const activeClinicals = clinicalChecks.map(c => clinicalLabels[c.value]);
+  const hasClinical = clinicalChecks.length > 0;
+
+  // ===== Doz mantığı =====
+  // Başlangıç dozu HER ZAMAN 80 mg
+  // Yüksek doz seçenekleri ne zaman gösterilir:
+  //  - eGFR ≥ 30 + klinik durum işaretli → 100–160 mg arası seçenekler
+  //  - eGFR < 30 → 100–200 mg arası seçenekler
+  //  - eGFR ≥ 30 + klinik durum yok → yüksek doz seçeneği gösterilmez
+  const startInfRate = egfr < 30 ? 20 : 5;
+  const startDose = 80;
+  let higherDoses = [];
+  let maxDose;
+
+  if (egfr < 30) {
+    higherDoses = [100, 120, 140, 160, 180, 200];
+    maxDose = 200;
+  } else if (hasClinical) {
+    higherDoses = [100, 120, 140, 160];
+    maxDose = 160;
+  } else {
+    maxDose = 80;
+  }
+
+  const egfrLabel = egfr >= 30
+    ? `eGFR ${egfr} mL/dk (≥ 30) — Normal/orta renal fonksiyon`
+    : `eGFR ${egfr} mL/dk (&lt; 30) — Renal disfonksiyon`;
+
+  // ===== HTML çıktı =====
   let html = '';
-  let startPO, startIV, maxSingle, note = '';
 
-  // Endikasyon-spesifik başlangıç
-  if (ind === 'cirrhosis') {
-    startPO = wt < 50 ? 20 : 40;
-    startIV = startPO / 2;
-    maxSingle = egfr < 30 ? '160–200 mg' : '160 mg';
-    note = 'Spironolakton ile 100:40 oranında kombine et. Maksimum günlük: 160 mg.';
-  } else if (ind === 'pulm') {
-    startPO = '—';
-    startIV = naive === 'yes' ? 40 : 'Ev dozu × 1–2.5';
-    maxSingle = egfr < 30 ? '200 mg' : '80–200 mg';
-    note = 'Hızlı IV bolus, dispne 15–20 dk içinde rahatlar (diürezden önce).';
-  } else if (ind === 'nephrotic') {
-    startPO = 40;
-    startIV = 20;
-    maxSingle = egfr < 30 ? '200 mg' : '80–160 mg';
-    note = 'Hipoalbüminemi varsa albumin + furosemid kombinasyonu düşünülebilir.';
-  } else {
-    startPO = 20;
-    startIV = 20;
-    maxSingle = egfr < 30 ? '200 mg' : '80 mg';
-  }
-
-  // Kronik kullanıcı override
-  if (naive === 'no') {
-    const cd = parseFloat(document.getElementById('m1_currentMg').value);
-    const cf = parseInt(document.getElementById('m1_currentFreq').value);
-    const cr = document.getElementById('m1_currentRoute').value;
-    const drug = document.getElementById('m1_currentDrug').value;
-
-    if (cd && cf) {
-      // Furosemid eşdeğeri PO'ya çevir
-      let furoEqPO;
-      if (drug === 'furosemide') {
-        furoEqPO = cr === 'iv' ? cd * 2 * cf : cd * cf;
-      } else {
-        furoEqPO = cd * 2.5 * cf; // torsemid (oral)
-      }
-      const ivBolus = Math.round(furoEqPO * 0.5 * 1.5); // 0.5 oral→IV, 1.5 = mid 1-2.5x
-      const ivBolusHi = Math.round(furoEqPO * 0.5 * 2.5);
-
-      html += `<div class="output-section">
-        <div class="output-label">Mevcut günlük furosemid PO eşdeğeri</div>
-        <div class="output-value-mono">${furoEqPO} mg/gün PO</div>
-      </div>`;
-      html += `<div class="output-section">
-        <div class="output-label">Önerilen IV Bolus (Akut Dekompansasyon)</div>
-        <div class="output-value">${ivBolus}–${ivBolusHi} mg IV</div>
-        <div class="output-text">Ev dozunun 1–2.5 katı. Tek doz tavanı: ${maxSingle}.</div>
-      </div>`;
-    }
-  } else {
-    html += `<div class="output-section">
-      <div class="output-label">Başlangıç Dozu — Oral</div>
-      <div class="output-value">${startPO} mg PO QD</div>
-    </div>`;
-    html += `<div class="output-section">
-      <div class="output-label">Başlangıç Dozu — IV (Alternatif)</div>
-      <div class="output-value">${startIV === '—' ? '—' : startIV + ' mg IV'}</div>
+  // Klinik durum özeti
+  if (hasClinical) {
+    html += `<div class="alert alert-info" style="margin-bottom:14px">
+      <strong>İşaretli klinik durum(lar):</strong> ${activeClinicals.join(' · ')}<br>
+      <span style="font-size:12px">Bu durumlarda standart 80 mg dozu yetersiz kalabilir. Yanıt yetersizse aşağıdaki yüksek doz seçeneklerinden uygun olanı seç.</span>
     </div>`;
   }
 
-  html += `<div class="output-section">
-    <div class="output-label">Maksimum Etkili Tek Doz</div>
-    <div class="output-value-mono">${maxSingle}</div>
-    <div class="output-text">eGFR ${egfr} mL/dk için. Bu eşik üstünde ek diürez beklenmez.</div>
+  // Başlangıç dozu (her zaman 80 mg)
+  html += `<div style="margin-bottom:8px;font-family:var(--serif);font-weight:600;font-size:17px;color:var(--ink)">Başlangıç Dozu — 80 mg</div>`;
+  html += renderOrderBlock(startDose, startInfRate, 'Standart Başlangıç');
+
+  // Yüksek doz seçenekleri
+  if (higherDoses.length > 0) {
+    html += `<div style="margin:24px 0 10px 0;padding-top:18px;border-top:2px dashed var(--line)">
+      <div style="font-family:var(--serif);font-weight:600;font-size:17px;color:var(--ink)">Yanıt Yetersizse — Yüksek Doz Seçenekleri</div>
+      <div style="font-size:13px;color:var(--ink-soft);margin-top:4px;margin-bottom:12px">
+        80 mg ile 2 saat içinde adekuat yanıt alınamazsa (idrar &lt; 100–150 mL, urin Na &lt; 50 mmol/L), aşağıdaki seçeneklerden uygun dozu seç.
+        <strong>Tek doz tavanı: ${maxDose} mg.</strong> Bu eşik üstünde ek diürez beklenmez.
+      </div>
+      <div class="dose-btn-group">`;
+    higherDoses.forEach(d => {
+      const infR = d <= 80 ? 5 : d <= 160 ? 10 : 20;
+      html += `<button class="dose-btn" data-dose="${d}" onclick="showHigherDose(${d}, ${infR})">${d} mg<br><span style="font-size:11px;font-weight:400;opacity:.8">${ampCount(d)} amp</span></button>`;
+    });
+    html += `</div>
+      <div id="m1_higherDoseOutput" style="margin-top:16px"></div>
+    </div>`;
+  }
+
+  // Uyarılar
+  if (egfr < 15) {
+    html += `<div class="alert alert-danger" style="margin-top:14px"><strong>İleri evre KBH (eGFR &lt; 15):</strong> İdrar çıkışını yakından izle. Anürik hastada furosemid kullanma. Refrakter olguda RRT değerlendir.</div>`;
+  }
+
+  html += `<div class="alert alert-info" style="margin-top:14px"><strong>Ototoksisite uyarısı:</strong> Yüklemede ≥160 mg dozda IV hızı &lt; 4 mg/dk olmalı. Aminoglikozid veya vankomisin kombinasyonunda risk artar.</div>`;
+
+  // En altta tavan referansı
+  html += `<div class="output-section" style="margin-top:14px">
+    <div class="output-label">⚡ Maksimum Etkin Tek Doz (Bu Hasta İçin)</div>
+    <div class="output-value">${maxDose} mg (${ampCount(maxDose)} ampul)</div>
+    <div class="output-text" style="margin-top:4px">${egfrLabel}${hasClinical && egfr >= 30 ? ' · Klinik durum (+) → tavan 160 mg' : ''}.</div>
   </div>`;
-
-  html += `<div class="output-section">
-    <div class="output-label">Titrasyon Kuralı</div>
-    <div class="output-text">3–5 gün aralıklarla yanıta göre artır. <strong>Yanıt yoksa: doz × 2 (sıklığı değil!)</strong></div>
-  </div>`;
-
-  if (note) html += `<div class="alert alert-info">${note}</div>`;
-
-  if (egfr < 30) html += `<div class="alert alert-warn"><strong>eGFR &lt; 30:</strong> Yüksek dozlar gerekebilir. İnfüzyona geçişte 20 mg/saat başla.</div>`;
-  if (egfr < 15) html += `<div class="alert alert-danger"><strong>İleri evre KBH:</strong> İdrar çıkışını yakından izle. Anürik hastada kullanma.</div>`;
 
   html += `<div class="export-bar"><button class="btn-secondary" onclick="window.print()">📄 Yazdır</button></div>`;
-
-  out.innerHTML = html;
-}
-
-// MODULE 2
-function calcM2(){
-  const drug = document.getElementById('m2_drug').value;
-  const dose = parseFloat(document.getElementById('m2_dose').value);
-  const freq = parseInt(document.getElementById('m2_freq').value);
-  const egfr = parseFloat(document.getElementById('m2_egfr').value);
-  const out = document.getElementById('m2_initial');
-
-  if (!dose || !egfr) {
-    out.innerHTML = '<div class="alert alert-warn"><strong>Eksik bilgi:</strong> Doz ve eGFR girilmeli.</div>';
-    return;
-  }
-
-  // Furosemid PO eşdeğerine çevir
-  let furoTotalPO;
-  if (drug === 'furosemide') furoTotalPO = dose * freq;
-  else furoTotalPO = dose * 2.5 * freq; // torsemid
-
-  const ivLow = Math.round(furoTotalPO * 0.5 * 1);
-  const ivMid = Math.round(furoTotalPO * 0.5 * 1.5);
-  const ivHi = Math.round(furoTotalPO * 0.5 * 2.5);
-  const maxSingle = egfr < 30 ? 200 : 80;
-  const finalIVHi = Math.min(ivHi, maxSingle);
-
-  let html = `<div class="output-section">
-    <div class="output-label">Toplam Günlük Furosemid PO Eşdeğeri</div>
-    <div class="output-value-mono">${furoTotalPO} mg/gün PO</div>
-  </div>`;
-
-  html += `<div class="output-section">
-    <div class="output-label">Önerilen İlk IV Bolus</div>
-    <div class="output-value">${ivMid} mg IV</div>
-    <div class="output-text">Aralık: ${ivLow}–${finalIVHi} mg (ev dozunun 1–2.5 katı). Maksimum tek doz: ${maxSingle} mg.</div>
-  </div>`;
-
-  if (ivHi > maxSingle) {
-    html += `<div class="alert alert-warn"><strong>Tavan limiti:</strong> Hesaplanan üst limit (${ivHi} mg) renal fonksiyon eşiğini (${maxSingle} mg) aşıyor. Tek dozda ${maxSingle} mg ile sınırlandı.</div>`;
-  }
-
-  html += `<div class="output-section">
-    <div class="output-label">Yanıt Değerlendirmesi</div>
-    <div class="output-text">2 saat içinde idrar çıkışı + spot urin Na ölç. <strong>Yetersizse: dozu iki katına çıkar (sıklığı değil).</strong></div>
-  </div>`;
-
-  html += `<div class="alert alert-info"><strong>Sonraki adım:</strong> Aşağıdaki algoritmayı adım adım takip et. Bolus dirençliyse infüzyona geçişte ${egfr < 30 ? '20 mg/saat' : '5 mg/saat'} ile başla.</div>`;
-
-  out.innerHTML = html;
-}
-
-// MODULE 3
-function calcM3(){
-  const from = document.getElementById('m3_from').value;
-  const to = document.getElementById('m3_to').value;
-  const dose = parseFloat(document.getElementById('m3_dose').value);
-  const out = document.getElementById('m3_output');
-
-  if (!dose) {
-    out.innerHTML = '<div class="alert alert-warn"><strong>Doz girilmeli.</strong></div>';
-    return;
-  }
-
-  // Furosemid PO eşdeğerine çevir
-  const conversionToFuroPO = {
-    'furo_po': 1,
-    'furo_iv': 2,        // IV → PO ×2
-    'tors_po': 2.5       // 10-20 mg tors = 40 mg furo → ortalama
-  };
-  const conversionFromFuroPO = {
-    'furo_po': 1,
-    'furo_iv': 0.5,
-    'tors_po': 1/2.5
-  };
-
-  const furoEq = dose * conversionToFuroPO[from];
-  const targetDose = furoEq * conversionFromFuroPO[to];
-
-  const labels = {
-    'furo_po': 'Furosemid PO',
-    'furo_iv': 'Furosemid IV',
-    'tors_po': 'Torsemid PO'
-  };
-
-  let html = `<div class="output-section">
-    <div class="output-label">Mevcut Doz</div>
-    <div class="output-value-mono">${dose} mg ${labels[from]}</div>
-  </div>`;
-
-  html += `<div class="output-section">
-    <div class="output-label">Furosemid PO Eşdeğeri</div>
-    <div class="output-value-mono">${furoEq} mg PO</div>
-  </div>`;
-
-  html += `<div class="output-section">
-    <div class="output-label">Hedef Doz</div>
-    <div class="output-value">${targetDose < 1 ? targetDose.toFixed(2) : Math.round(targetDose * 10) / 10} mg ${labels[to]}</div>
-  </div>`;
-
-  if (from.includes('po') && to.includes('iv')) {
-    html += `<div class="alert alert-info"><strong>PO → IV geçiş:</strong> Biyoyararlanım %47–64 (ortalama %50). İlk dozdan sonra yanıta göre titre et.</div>`;
-  } else if (from.includes('iv') && to.includes('po')) {
-    html += `<div class="alert alert-warn"><strong>IV → PO geçiş:</strong> Hesaplanan PO doz, IV'in 2 katı. Bireysel biyoyararlanım değişken — yanıt zayıfsa torsemid/bumetanid alternatif.</div>`;
-  }
-
-  if (from.startsWith('furo') && to.startsWith('tors')) {
-    html += `<div class="alert alert-info"><strong>Loop diüretik değişimi:</strong> Torsemid'in PO biyoyararlanımı daha tutarlı (~%80–100). PO yanıtı zayıf hastada avantajlı.</div>`;
-  }
 
   out.innerHTML = html;
 }
@@ -1219,75 +966,96 @@ function renderM4(){
   const urine = document.querySelector('input[name="m4_urine"]:checked').value;
   const container = document.getElementById('m4_scenarios');
 
-  let scenarios = [];
+  let cards = [];
 
+  // ===== ANÜRİK =====
   if (urine === 'anuric') {
-    scenarios.push({
-      type:'bad', title:'Furosemid kullanılmamalı',
+    cards.push({
+      type:'bad', title:'⛔ Furosemid Kullanılmamalı',
       body:'Anürik hastada furosemid herhangi bir fayda sağlamaz. Sadece ototoksisite, hipersensitivite ve sistemik yan etki riski yaratır.',
-      dose:'KULLANMA'
+      order:'KULLANMA — Order verme.'
     });
     if (mod === 'hd') {
-      scenarios.push({
-        type:'warn', title:'Anürik HD hastasında özel durum',
-        body:'Diyaliz arası interdialitik kilo alımı diüretikle düzeltilemez. Sıvı yönetimi UF ve diyetle yapılır.',
-        dose:'Sıvı kısıtlaması + Na kısıtlaması'
+      cards.push({
+        type:'warn', title:'Anürik HD Hastası — Alternatif Yaklaşım',
+        body:'İnterdialitik kilo alımı diüretikle düzeltilemez. Sıvı yönetimi UF ve diyetle yapılır.',
+        order:'Sıvı kısıtlaması (1000 mL/gün) + Na kısıtlaması (&lt; 2 g/gün) + diyaliz UF ayarı.'
       });
     }
     if (mod === 'pd') {
-      scenarios.push({
-        type:'warn', title:'Anürik PD hastasında',
-        body:"Peritoneal UF'yi diüretik artırmaz. Daha hipertonik solüsyon, daha sık değişim veya icodextrin değerlendir.",
-        dose:'PD reçetesi optimize'
-      });
-    }
-  }
-
-  if (urine === 'oliguric' || urine === 'residual') {
-    if (mod === 'hd') {
-      scenarios.push({
-        type:'warn', title:'HD hastası, rezidüel idrar var',
-        body:'eGFR &lt;30 dozlama mantığını uygula. Yüksek dozlar gerekli — tübül lümenine yeterli ilaç ulaşması için.',
-        dose: urine === 'residual' ? '40–80 mg PO/IV BID, gerekirse 160–200 mg tek doz' : '80–160 mg IV, yanıt göre titre'
-      });
-      scenarios.push({
-        type:'ok', title:'Rezidüel fonksiyonu koruma',
-        body:"Diüretik rezidüel idrar volümünü artırabilir ancak GFR'yi koruduğuna dair kanıt zayıf. Asıl koruma: nefrotoksinden kaçınmak (NSAID, kontrast, AMG).",
-        dose:'Rutin başlama — endikasyona göre'
-      });
-    }
-    if (mod === 'pd') {
-      scenarios.push({
-        type:'ok', title:'PD hastası, rezidüel idrar — Standart Doz',
-        body:'eGFR &lt;30 prensipleri geçerli. PD hastalarında oral 250 mg vs 500 mg karşılaştırmasında <strong>500 mg daha etkili</strong> bulundu (single-dose data).',
-        dose:'Furosemid 250–500 mg PO QD'
-      });
-      scenarios.push({
-        type:'warn', title:'Yüksek doz uyarısı',
-        body:'500 mg oral dozda ototoksisite ve elektrolit izlemi sıkı yapılmalı. Aminoglikozid veya vankomisin kombinasyonundan kaçın.',
-        dose:'İşitme + K, Mg izlem'
+      cards.push({
+        type:'warn', title:'Anürik PD Hastası — Alternatif Yaklaşım',
+        body:'Peritoneal ultrafiltrasyonu furosemid artırmaz. PD reçetesi optimize edilmeli.',
+        order:'Daha hipertonik solüsyon (%2.5 veya %4.25 dekstroz) veya icodextrin uzun bekleme. Sıvı/Na kısıtlaması.'
       });
     }
     if (mod === 'crrt') {
-      scenarios.push({
-        type:'warn', title:'CRRT hastasında furosemid genellikle gereksiz',
-        body:"Sıvı yönetimi CRRT UF oranı ile düzenlenir. Furosemid eklemenin ek faydası genellikle yoktur. İstisna: rezidüel renal fonksiyonu belirgin olan ve CRRT'den ayrılma fazında olan hastalar.",
-        dose:'Rutin önerilmez'
+      cards.push({
+        type:'warn', title:'Anürik CRRT Hastası',
+        body:'Sıvı yönetimi CRRT UF oranı ile düzenlenir. Anürik hastada furosemid kontrendike.',
+        order:'CRRT UF hızı klinik volüm hedefine göre ayarlanır.'
       });
     }
   }
 
-  let html = '<div class="scenario-grid">';
-  scenarios.forEach(s => {
-    html += `<div class="scenario scenario-${s.type}">
-      <div class="scenario-head">
-        <div class="scenario-title">${s.title}</div>
-      </div>
-      <div class="scenario-body">${s.body}</div>
-      <div class="scenario-dose">${s.dose}</div>
+  // ===== OLİGÜRİK VEYA REZİDÜEL =====
+  if (urine === 'oliguric' || urine === 'residual') {
+
+    if (mod === 'hd') {
+      cards.push({
+        type:'ok', title:'📋 ORDER — HD Hastası, Rezidüel İdrar Var',
+        body:'eGFR &lt;30 prensiplerine göre yüksek doz gerekli (tübül lümenine yeterli ilaç ulaşması için). Sürekli infüzyon tercih edilir — pik konsantrasyondan kaçınmak için.',
+        order:`
+          <strong>Sürekli IV İnfüzyon:</strong> Furosemid <strong>4 ampul (80 mg) + 80 mL %0.9 NaCl</strong> hazırla<br>
+          Toplam hacim: 88 mL · Konsantrasyon: ~1 mg/mL<br>
+          <strong>Perfüzör ile 20 mL/saat hızda IV infüzyon</strong> (= 20 mg/saat)<br>
+          4 saatte tamamlanır. Yanıtsızsa hızı 40 mL/saat'e (40 mg/saat) titre et. Tavan: 40 mg/saat.<br><br>
+          <strong>Veya Yükleme + İnfüzyon:</strong> Furosemid <strong>4 amp (80 mg) + 100 mL SF</strong>, 27 dk kısa infüzyon ile yükleme. Hemen ardından yukarıdaki idame infüzyonu başlat.
+        `
+      });
+    }
+
+    if (mod === 'pd') {
+      cards.push({
+        type:'ok', title:'📋 ORDER — PD Hastası, Rezidüel İdrar Var',
+        body:'PD hastalarında oral 500 mg, 250 mg\'dan istatistiksel olarak daha etkili (single-dose data). IV alternatif olarak sürekli infüzyon önerilir.',
+        order:`
+          <strong>Oral seçenek (kanıta dayalı):</strong> <strong>Lasix 12.5 tablet (500 mg)</strong> PO, günde 1 (sabah)<br>
+          <span style="font-size:12px;color:var(--ink-mute)">Pratik açıdan: Lasix Long 500 mg tablet TR'de yoktur — 12–13 adet 40 mg tableti aynı seferde alır</span><br><br>
+          <strong>IV alternatif — Sürekli İnfüzyon:</strong> Furosemid <strong>4 ampul (80 mg) + 80 mL %0.9 NaCl</strong> hazırla<br>
+          <strong>Perfüzör ile 20 mL/saat hızda IV infüzyon</strong> (= 20 mg/saat, 4 saatte tamamlanır)<br>
+          Yanıtsızsa 40 mL/saat'e titre et. Tavan: 40 mg/saat.
+        `
+      });
+      cards.push({
+        type:'warn', title:'⚠️ Yüksek Doz İzlem Gerekleri',
+        body:'500 mg gibi yüksek dozlarda ototoksisite ve elektrolit izlemi sıkı yapılmalı.',
+        order:'Günlük: K, Mg, Cl, kreatinin. Haftalık işitme sorgusu. Aminoglikozid/vankomisin kombinasyonundan kaçın.'
+      });
+    }
+
+    if (mod === 'crrt') {
+      cards.push({
+        type:'warn', title:'CRRT Hastasında Furosemid Genellikle Gereksiz',
+        body:'Sıvı yönetimi CRRT UF oranı ile düzenlenir. Furosemid eklemenin ek faydası genellikle yoktur. İstisna: rezidüel renal fonksiyonu belirgin olan ve CRRT\'den ayrılma fazında olan hastalar.',
+        order:`
+          <strong>Rutin önerilmez.</strong><br>
+          CRRT'den ayrılma fazında (rezidüel idrar varsa) deneme:<br>
+          <strong>Furosemid 4 ampul (80 mg) + 80 mL %0.9 NaCl</strong>, perfüzörle <strong>20 mL/saat</strong> (= 20 mg/saat).<br>
+          <span style="font-size:12px;color:var(--ink-mute)">2 saatte idrar yanıtı değerlendir, yoksa kes.</span>
+        `
+      });
+    }
+  }
+
+  let html = '';
+  cards.forEach(c => {
+    html += `<div class="card" style="border-left:4px solid var(--${c.type === 'bad' ? 'danger' : c.type === 'warn' ? 'warn' : 'accent'});margin-top:14px">
+      <div class="card-title" style="font-size:16px;margin-bottom:8px">${c.title}</div>
+      <div style="font-size:13px;color:var(--ink-soft);line-height:1.55;margin-bottom:10px">${c.body}</div>
+      <div style="background:#fdfbf6;padding:12px;border-radius:6px;font-size:14px;line-height:1.6">${c.order}</div>
     </div>`;
   });
-  html += '</div>';
 
   container.innerHTML = html;
 }
